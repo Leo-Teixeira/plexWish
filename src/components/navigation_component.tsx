@@ -1,33 +1,63 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomePage from '../screens/home/home_page';
+import ProfilePage from '../screens/profile/profile_page';
+import WhishlistPage from '../screens/whishlist/whishlist_page';
 import SearchPage from '../screens/search/search_page';
 import {NavigationContainer} from '@react-navigation/native';
 import {Text, View} from 'react-native';
+import {House, Search, BookmarkMinus, User} from 'lucide-react-native';
+import {COLORS} from '../../global_style';
 
 const Tab = createBottomTabNavigator();
-
-function HomeScreen() {
-  return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>Home!</Text>
-    </View>
-  );
-}
-
-function SettingsScreen() {
-  return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
 
 function NavigationComponent() {
   return (
     <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
+      <Tab.Navigator
+        screenOptions={({route}) => ({
+          tabBarIcon: ({focused, color, size}) => {
+            switch (route.name) {
+              case 'Home':
+                return (
+                  <House
+                    color={
+                      focused ? COLORS.primary.yellow : COLORS.background.black
+                    }
+                  />
+                );
+              case 'Search':
+                return (
+                  <Search
+                    color={
+                      focused ? COLORS.primary.yellow : COLORS.background.black
+                    }
+                  />
+                );
+              case 'Whishlist':
+                return (
+                  <BookmarkMinus
+                    color={
+                      focused ? COLORS.primary.yellow : COLORS.background.black
+                    }
+                  />
+                );
+              case 'Profile':
+                return (
+                  <User
+                    color={
+                      focused ? COLORS.primary.yellow : COLORS.background.black
+                    }
+                  />
+                );
+            }
+          },
+          tabBarActiveTintColor: COLORS.primary.yellow,
+          tabBarInactiveTintColor: COLORS.primary.gray,
+        })}>
+        <Tab.Screen name="Home" component={HomePage} />
+        <Tab.Screen name="Search" component={SearchPage} />
+        <Tab.Screen name="Whishlist" component={WhishlistPage} />
+        <Tab.Screen name="Profile" component={ProfilePage} />
       </Tab.Navigator>
     </NavigationContainer>
   );

@@ -2,7 +2,7 @@ import React from 'react';
 import {Text} from 'react-native';
 
 const HomePage = () => {
-  return <Text>Search page</Text>;
+  return <Text>Profile page</Text>;
 };
 
 export default HomePage;

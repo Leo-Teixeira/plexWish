@@ -6,6 +6,7 @@ import {COLORS, globalStyles} from '../../../global_style';
 import {styles} from './login_styles';
 import {EyeIcon, EyeOffIcon} from 'lucide-react-native'; // Icons pour voir/cacher le mot de passe
 
+
 export default function App() {
   const [showPassword, setShowPassword] = useState(false);
 
