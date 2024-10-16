@@ -1,16 +1,14 @@
-import React from 'react';
+import * as React from 'react';
 import {
-  FlatList,
-  Image,
-  ImageBackground,
-  ScrollView,
-  StyleSheet,
+  View,
   Text,
   TouchableOpacity,
-  View,
+  StyleSheet,
+  ImageBackground,
+  ScrollView,
 } from 'react-native';
-import AllMoviesPage from '../home/all_movies_page';
 import {COLORS} from '../../../global_style';
+import AllMoviesPage from './all_movies_page';
 
 const SpecificRoute = ({title}) => (
   <View style={styles.pageContainer}>
@@ -18,20 +16,7 @@ const SpecificRoute = ({title}) => (
   </View>
 );
 
-const carousel = [
-  {id: '1', title: 'Hawkeye', image: '../../asset/stranger.png'},
-  {id: '2', title: 'Thor: Love and Thunder', image: '../../asset/stranger.png'},
-  {id: '3', title: 'WandaVision', image: '../../asset/stranger.png'},
-  {id: '4', title: 'The Godfather', image: '../../asset/stranger.png'},
-  {id: '5', title: 'Avengers: Endgame', image: '../../asset/stranger.png'},
-  {
-    id: '6',
-    title: 'Spider-Man: No Way Home',
-    image: '../../asset/stranger.png',
-  },
-];
-
-const HomePage = () => {
+const TabBarView = () => {
   const genres = ['All', 'Romance', 'Crime', 'Drama', 'Horror'];
   const [selectedIndex, setSelectedIndex] = React.useState(0);
 
@@ -53,24 +38,13 @@ const HomePage = () => {
   };
 
   return (
-    <ScrollView>
-      <View>
-        <FlatList
-          data={carousel}
-          renderItem={({item}) => (
-            <View style={styles.carouselItem}>
-              <Image
-                source={require('../../asset/stranger.png')}
-                style={styles.carouselImage}
-              />
-            </View>
-          )}
-          keyExtractor={item => item.id.toString()}
-          horizontal={true}
-          showsHorizontalScrollIndicator={true}
-          pagingEnabled={true}
-        />
-        {/* Position the tab bar absolutely over the image */}
+    <ScrollView style={{flex: 1}}>
+      {/* Image en haut de l'écran */}
+      <ImageBackground
+        source={require('../../asset/papa.png')} // Remplace par le chemin de ton image
+        style={styles.imageContainer}
+        resizeMode="cover">
+        {/* Custom Tab Bar */}
         <View style={styles.tabBarContainer}>
           {genres.map((genre, index) => (
             <TouchableOpacity
@@ -84,7 +58,8 @@ const HomePage = () => {
                       : 'transparent',
                 },
               ]}
-              onPress={() => setSelectedIndex(index)}>
+              onPress={() => setSelectedIndex(index)} // Change the selected index
+            >
               <Text
                 style={[
                   styles.tabText,
@@ -100,36 +75,26 @@ const HomePage = () => {
             </TouchableOpacity>
           ))}
         </View>
-      </View>
+      </ImageBackground>
 
-      <View>{renderContent()}</View>
+      {/* Content based on selected index */}
+      {renderContent()}
     </ScrollView>
   );
 };
 
-export default HomePage;
+export default TabBarView;
 
 const styles = StyleSheet.create({
-  carouselItem: {
-    // width: '100%',
-    // justifyContent: 'center',
-    // alignItems: 'center',
-  },
-  carouselImage: {
-    // width: '100%',
-    // height: 430,
-    // borderRadius: 10,
+  imageContainer: {
+    height: '50%', // Ajuster la taille de l'image à 50% de l'écran
+    width: '100%', // S'assurer que l'image prenne toute la largeur
   },
   tabBarContainer: {
-    position: 'absolute', // Position the tab bar absolutely
-    top: 10, // Position it at the top of the image
-    left: 10,
-    right: 10,
     flexDirection: 'row',
     backgroundColor: '#42423F',
     borderRadius: 90,
-    marginHorizontal: 10,
-    zIndex: 10, // Ensure it appears above the image
+    margin: 10,
   },
   tabItem: {
     flex: 1,
@@ -145,14 +110,14 @@ const styles = StyleSheet.create({
   contentContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: 20, // Ajouter un peu de padding si nécessaire
   },
   pageContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: '100%',
+    width: '100%', // S'assurer que la page prenne toute la largeur
   },
   pageText: {
-    color: '#fff',
+    color: '#fff', // Couleur du texte pour la lisibilité sur le fond
   },
 });

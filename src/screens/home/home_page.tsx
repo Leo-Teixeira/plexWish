@@ -1,8 +1,9 @@
 import React from 'react';
 import {Text} from 'react-native';
+import TabBarView from './tab_bar_view';
 
 const HomePage = () => {
-  return <Text>Home page</Text>;
+  return <TabBarView />;
 };
 
 export default HomePage;
