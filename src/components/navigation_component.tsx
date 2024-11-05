@@ -55,7 +55,7 @@ function NavigationComponent() {
           tabBarActiveTintColor: COLORS.primary.yellow,
           tabBarInactiveTintColor: COLORS.primary.gray,
         })}>
-        <Tab.Screen name="Home" component={SearchPage} />
+        <Tab.Screen name="Home" component={HomePage} />
         <Tab.Screen name="Search" component={SearchPage} />
         <Tab.Screen name="Whishlist" component={WhishlistPage} />
         <Tab.Screen name="Profile" component={ProfilePage} />

@@ -2,59 +2,63 @@ import React, {createContext, useState, useEffect, ReactNode} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Types pour le contexte
-interface AuthContextType {
-  getMoviesByFilter: (genre: string) => Promise<void>;
-  getTopRatedMovies: () => Promise<void>;
-  getPopularMovies: () => Promise<void>;
+interface MoviesContextType {
+  getMoviesByFilter: (genre: string | null) => Promise<MovieApiResponse>;
+  getTopRatedMovies: () => Promise<MovieApiResponse>;
+  getPopularMovies: () => Promise<MovieApiResponse>;
   isLoading: boolean;
 }
 
-export const AuthContext = createContext<AuthContextType | null>(null);
+export const MoviesContext = createContext<MoviesContextType | null>(null);
 
-const AuthProvider = ({children}: {children: ReactNode}) => {
+const MoviesProvider = ({children}: {children: ReactNode}) => {
   const [authToken, setAuthToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const loadToken = async () => {
-      const token = await AsyncStorage.getItem('authToken');
-      if (token) {
-        setAuthToken(token);
-      }
+    const loadToken = () => {
+      const token =
+        'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5NGFlZjcwMGQ1MjU5MGMyODU4NjhhNzVmNTk0OGFkNyIsIm5iZiI6MTcyODkzOTUzNy41MDUwNywic3ViIjoiNjU2NDY2ZGI3ZGZkYTY1OTMyNjYyZGYyIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.qPMTRPYliC5vwc31lkpxzcRXnTFjPTBDJvpDW9k-s-0';
+      setAuthToken(token);
       setIsLoading(false);
     };
     loadToken();
   }, []);
 
-  const getMoviesByFilter = async (genres: string) => {
-    const options = {
-      method: 'GET',
-      headers: {
-        accept: 'application/json',
-        Authorization: 'Bearer ' + authToken,
-      },
-    };
-    if (genres != null) {
-      fetch(
-        'https://api.themoviedb.org/3/discover/movie?include_adult=true&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_genres=' +
-          genres,
-        options,
-      )
-        .then(response => response.json())
-        .then(response => console.log(response))
-        .catch(err => console.error(err));
-    } else {
-      fetch(
-        'https://api.themoviedb.org/3/discover/movie?include_adult=true&include_video=false&language=en-US&page=1&sort_by=popularity.desc',
-        options,
-      )
-        .then(response => response.json())
-        .then(response => console.log(response))
-        .catch(err => console.error(err));
+  const getMoviesByFilter = async (
+    genres: string | null,
+  ): Promise<MovieApiResponse> => {
+    try {
+      const options = {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+          Authorization: 'Bearer ' + authToken,
+        },
+      };
+      if (genres != null) {
+        const response = await fetch(
+          `https://api.themoviedb.org/3/discover/movie?include_adult=true&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_genres=${genres}`,
+          options,
+        );
+        const data: MovieApiResponse = await response.json();
+        console.log(data);
+        return data;
+      } else {
+        const response = await fetch(
+          'https://api.themoviedb.org/3/discover/movie?include_adult=true&include_video=false&language=en-US&page=1&sort_by=popularity.desc',
+          options,
+        );
+        const data: MovieApiResponse = await response.json();
+        console.log(data);
+        return data;
+      }
+    } catch (error) {
+      throw new Error('error');
     }
   };
 
-  const getTopRatedMovies = async () => {
+  const getTopRatedMovies = async (): Promise<MovieApiResponse> => {
     const options = {
       method: 'GET',
       headers: {
@@ -62,17 +66,21 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
         Authorization: 'Bearer ' + authToken,
       },
     };
-
-    fetch(
-      'https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1',
-      options,
-    )
-      .then(response => response.json())
-      .then(response => console.log(response))
-      .catch(err => console.error(err));
+    try {
+      const response = await fetch(
+        'https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1',
+        options,
+      );
+      const data: MovieApiResponse = await response.json();
+      console.log(data);
+      return data;
+    } catch (err) {
+      console.error(err);
+      throw new Error('error');
+    }
   };
 
-  const getPopularMovies = async () => {
+  const getPopularMovies = async (): Promise<MovieApiResponse> => {
     const options = {
       method: 'GET',
       headers: {
@@ -80,22 +88,31 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
         Authorization: 'Bearer ' + authToken,
       },
     };
-
-    fetch(
-      'https://api.themoviedb.org/3/movie/popular?language=en-US&page=1',
-      options,
-    )
-      .then(response => response.json())
-      .then(response => console.log(response))
-      .catch(err => console.error(err));
+    try {
+      const response = await fetch(
+        'https://api.themoviedb.org/3/movie/popular?language=en-US&page=1',
+        options,
+      );
+      const data: MovieApiResponse = await response.json();
+      console.log(data);
+      return data;
+    } catch (err) {
+      console.error(err);
+      throw new Error('error');
+    }
   };
 
   return (
-    <AuthContext.Provider
-      value={{getMoviesByFilter, getTopRatedMovies, getPopularMovies, isLoading}}>
+    <MoviesContext.Provider
+      value={{
+        getMoviesByFilter,
+        getTopRatedMovies,
+        getPopularMovies,
+        isLoading,
+      }}>
       {children}
-    </AuthContext.Provider>
+    </MoviesContext.Provider>
   );
 };
 
-export default AuthProvider;
+export default MoviesProvider;
