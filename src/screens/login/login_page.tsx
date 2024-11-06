@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {Text, View, TextInput, TouchableOpacity} from 'react-native';
+import {Text, View, TextInput, Pressable} from 'react-native';
 import {useForm, Controller} from 'react-hook-form';
 import {AuthContext} from '../../../src/provider/auth_provider';
 import {COLORS, globalStyles} from '../../../global_style';
@@ -97,7 +97,7 @@ export default function App() {
           <Text style={globalStyles.errorText}>{errors.password.message}</Text>
         )}
 
-        <TouchableOpacity
+        <Pressable
           style={styles.togglePasswordButton}
           onPress={() => setShowPassword(prevState => !prevState)}>
           {showPassword ? (
@@ -105,17 +105,17 @@ export default function App() {
           ) : (
             <EyeIcon color={COLORS.background.black} size={24} />
           )}
-        </TouchableOpacity>
+        </Pressable>
       </View>
 
       <View style={styles.connectionButton}>
-        <TouchableOpacity
+        <Pressable
           style={globalStyles.button}
           onPress={handleSubmit(onSubmit)}>
           <Text style={globalStyles.buttonText}>Se connecter</Text>
-        </TouchableOpacity>
+        </Pressable>
 
-        <TouchableOpacity
+        <Pressable
           style={[
             globalStyles.button,
             {backgroundColor: COLORS.background.grey},
@@ -125,7 +125,7 @@ export default function App() {
             style={[globalStyles.buttonText, {color: COLORS.background.white}]}>
             S'inscrire
           </Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </View>
   );

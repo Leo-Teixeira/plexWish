@@ -4,37 +4,27 @@ import {
   Text,
   Image,
   StyleSheet,
-  TouchableOpacity,
+  Pressable,
   FlatList,
-  ScrollView,
-  ImageBackground,
   Dimensions,
 } from 'react-native';
 import {MoviesContext} from '../../provider/movies_provider';
 import {LinearGradient} from 'react-native-linear-gradient';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from './home_page';
 const {width: screenWidth} = Dimensions.get('window');
 
+type AllMoviesPageNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Details'
+>;
+
 export function AllMoviesPage() {
+  const navigation = useNavigation<AllMoviesPageNavigationProp>();
   const {getMoviesByFilter, getTopRatedMovies} = useContext(MoviesContext)!;
   const [allMovies, setAllMovies] = useState<MovieApiResponse>();
   const [bestMovies, setBestMovies] = useState<MovieApiResponse>();
-
-  const carousel = [
-    {id: '1', title: 'Hawkeye', image: '../../asset/stranger.png'},
-    {
-      id: '2',
-      title: 'Thor: Love and Thunder',
-      image: '../../asset/stranger.png',
-    },
-    {id: '3', title: 'WandaVision', image: '../../asset/stranger.png'},
-    {id: '4', title: 'The Godfather', image: '../../asset/stranger.png'},
-    {id: '5', title: 'Avengers: Endgame', image: '../../asset/stranger.png'},
-    {
-      id: '6',
-      title: 'Spider-Man: No Way Home',
-      image: '../../asset/stranger.png',
-    },
-  ];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,13 +42,15 @@ export function AllMoviesPage() {
   }, []);
 
   const renderAllItem = ({item}: {item: Movie}) => (
-    <TouchableOpacity style={styles.marvelItem}>
+    <Pressable
+      style={styles.marvelItem}
+      onPress={() => navigation.navigate('Details', {film: item})}>
       <Image
         source={{uri: 'https://image.tmdb.org/t/p/original' + item.poster_path}}
         style={styles.marvelImage}
       />
       <Text style={styles.marvelTitle}>{item.title}</Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 
   return (
@@ -89,12 +81,12 @@ export function AllMoviesPage() {
           <Text style={styles.text}>Discover</Text>
         </View>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.buttonBlack}>
+          <Pressable style={styles.buttonBlack}>
             <Text style={styles.buttonTextWhite}>+ Wishlist</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
+          </Pressable>
+          <Pressable style={styles.button}>
             <Text style={styles.buttonText}>Details</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </LinearGradient>
       <View style={styles.bodyContainer}>
@@ -137,9 +129,9 @@ export function AllMoviesPage() {
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel
             pulvinar auctor.
           </Text>
-          <TouchableOpacity style={styles.promoButton}>
+          <Pressable style={styles.promoButton}>
             <Text style={styles.promoButtonText}>Check details</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
     </View>
@@ -161,6 +153,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'transparent',
     padding: 16,
+    paddingTop: 40,
   },
   container: {
     flex: 1,
@@ -170,7 +163,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginVertical: 10,
-    paddingTop: 40,
   },
   sectionTitle: {
     fontSize: 18,

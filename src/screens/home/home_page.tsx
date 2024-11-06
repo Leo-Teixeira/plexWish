@@ -5,20 +5,24 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
+  Pressable,
   View,
   Dimensions,
 } from 'react-native';
 import AllMoviesPage from '../home/all_movies_page';
 import {COLORS} from '../../../global_style';
+import MoviesGenrePage from './genres_movies_page';
+import {createStackNavigator} from '@react-navigation/stack';
+import SpecificFilmPage from '../film/specific_film';
 
 const {width: screenWidth} = Dimensions.get('window');
 
-const SpecificRoute = ({title}) => (
-  <View style={styles.pageContainer}>
-    <Text style={styles.pageText}>{title} Page</Text>
-  </View>
-);
+export type RootStackParamList = {
+  Home: undefined;
+  Details: {film: Movie}; // Le type de données que vous passez à l'écran Details
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 const HomePage = () => {
   const genres = ['All', 'Romance', 'Crime', 'Drama', 'Horror'];
@@ -29,13 +33,13 @@ const HomePage = () => {
       case 0:
         return <AllMoviesPage />;
       case 1:
-        return <SpecificRoute title="Romance" />;
+        return <MoviesGenrePage idGenre="10749" />;
       case 2:
-        return <SpecificRoute title="Crime" />;
+        return <MoviesGenrePage idGenre="80" />;
       case 3:
-        return <SpecificRoute title="Drama" />;
+        return <MoviesGenrePage idGenre="18" />;
       case 4:
-        return <SpecificRoute title="Horror" />;
+        return <MoviesGenrePage idGenre="27" />;
       default:
         return <AllMoviesPage />;
     }
@@ -46,7 +50,7 @@ const HomePage = () => {
       <View style={{width: '100%'}}>
         <View style={styles.tabBarContainer}>
           {genres.map((genre, index) => (
-            <TouchableOpacity
+            <Pressable
               key={index}
               style={[
                 styles.tabItem,
@@ -70,7 +74,7 @@ const HomePage = () => {
                 ]}>
                 {genre}
               </Text>
-            </TouchableOpacity>
+            </Pressable>
           ))}
         </View>
       </View>
@@ -79,7 +83,20 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+function HomeStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Home"
+        component={HomePage}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen name="Details" component={SpecificFilmPage} />
+    </Stack.Navigator>
+  );
+}
+
+export default HomeStack;
 
 const styles = StyleSheet.create({
   carouselContainer: {
