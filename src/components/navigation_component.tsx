@@ -22,7 +22,7 @@ function NavigationComponent() {
                 return (
                   <House
                     color={
-                      focused ? COLORS.primary.yellow : COLORS.background.black
+                      focused ? COLORS.gold : COLORS.black
                     }
                   />
                 );
@@ -30,7 +30,7 @@ function NavigationComponent() {
                 return (
                   <Search
                     color={
-                      focused ? COLORS.primary.yellow : COLORS.background.black
+                      focused ? COLORS.gold : COLORS.black
                     }
                   />
                 );
@@ -38,7 +38,7 @@ function NavigationComponent() {
                 return (
                   <BookmarkMinus
                     color={
-                      focused ? COLORS.primary.yellow : COLORS.background.black
+                      focused ? COLORS.gold : COLORS.black
                     }
                   />
                 );
@@ -46,14 +46,14 @@ function NavigationComponent() {
                 return (
                   <User
                     color={
-                      focused ? COLORS.primary.yellow : COLORS.background.black
+                      focused ? COLORS.gold : COLORS.black
                     }
                   />
                 );
             }
           },
-          tabBarActiveTintColor: COLORS.primary.yellow,
-          tabBarInactiveTintColor: COLORS.primary.gray,
+          tabBarActiveTintColor: COLORS.gold,
+          tabBarInactiveTintColor: COLORS.gray,
         })}>
         <Tab.Screen name="Home" component={HomeStack} />
         <Tab.Screen name="Search" component={SearchPage} />

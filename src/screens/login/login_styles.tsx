@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     right: 20,
     top: '20%',
-    color: COLORS.background.black,
+    color: COLORS.black,
   },
   passwordContainer: {
     width: '100%',

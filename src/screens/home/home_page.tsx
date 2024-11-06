@@ -56,9 +56,7 @@ const HomePage = () => {
                 styles.tabItem,
                 {
                   backgroundColor:
-                    selectedIndex === index
-                      ? COLORS.background.white
-                      : 'transparent',
+                    selectedIndex === index ? COLORS.white : 'transparent',
                 },
               ]}
               onPress={() => setSelectedIndex(index)}>
@@ -67,9 +65,7 @@ const HomePage = () => {
                   styles.tabText,
                   {
                     color:
-                      selectedIndex === index
-                        ? COLORS.background.black
-                        : COLORS.background.white,
+                      selectedIndex === index ? COLORS.black : COLORS.white,
                   },
                 ]}>
                 {genre}
@@ -91,7 +87,11 @@ function HomeStack() {
         component={HomePage}
         options={{headerShown: false}}
       />
-      <Stack.Screen name="Details" component={SpecificFilmPage} />
+      <Stack.Screen
+        name="Details"
+        component={SpecificFilmPage}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 }
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     left: 10,
     right: 10,
     flexDirection: 'row',
-    backgroundColor: '#42423F',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
     borderRadius: 90,
     marginHorizontal: 10,
     zIndex: 10,
@@ -144,11 +144,11 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   pageText: {
-    color: '#fff',
+    color: COLORS.white,
   },
   button: {
     flex: 1,
-    backgroundColor: '#FFD700',
+    backgroundColor: COLORS.gold,
     paddingVertical: 10,
     marginHorizontal: 5,
     borderRadius: 10,
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
   },
   buttonBlack: {
     flex: 1,
-    backgroundColor: '#333333',
+    backgroundColor: COLORS.darkGray,
     paddingVertical: 10,
     marginHorizontal: 5,
     borderRadius: 10,
@@ -166,11 +166,11 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontWeight: 'bold',
-    color: '#000',
+    color: COLORS.black,
   },
   buttonTextWhite: {
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: COLORS.white,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   text: {
-    color: '#000000',
+    color: COLORS.black,
     fontSize: 16,
   },
 });

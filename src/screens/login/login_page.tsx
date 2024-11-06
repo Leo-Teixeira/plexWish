@@ -101,9 +101,9 @@ export default function App() {
           style={styles.togglePasswordButton}
           onPress={() => setShowPassword(prevState => !prevState)}>
           {showPassword ? (
-            <EyeOffIcon color={COLORS.background.black} size={24} />
+            <EyeOffIcon color={COLORS.black} size={24} />
           ) : (
-            <EyeIcon color={COLORS.background.black} size={24} />
+            <EyeIcon color={COLORS.black} size={24} />
           )}
         </Pressable>
       </View>
@@ -118,11 +118,11 @@ export default function App() {
         <Pressable
           style={[
             globalStyles.button,
-            {backgroundColor: COLORS.background.grey},
+            {backgroundColor: COLORS.gray},
           ]}
           onPress={handleSubmit(onSubmit)}>
           <Text
-            style={[globalStyles.buttonText, {color: COLORS.background.white}]}>
+            style={[globalStyles.buttonText, {color: COLORS.white}]}>
             S'inscrire
           </Text>
         </Pressable>

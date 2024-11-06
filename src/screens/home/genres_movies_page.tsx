@@ -9,13 +9,22 @@ import {
   Pressable,
 } from 'react-native';
 import {MoviesContext} from '../../provider/movies_provider';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from './home_page';
 
 const {width: screenWidth} = Dimensions.get('window');
 interface MoviesGenrePageProps {
   idGenre: string;
 }
 
+type AllMoviesPageNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Details'
+>;
+
 export const MoviesGenrePage: React.FC<MoviesGenrePageProps> = ({idGenre}) => {
+  const navigation = useNavigation<AllMoviesPageNavigationProp>();
   const {getMoviesByFilter} = useContext(MoviesContext)!;
   const [movies, setMovies] = useState<Movie[]>([]);
 
@@ -33,7 +42,9 @@ export const MoviesGenrePage: React.FC<MoviesGenrePageProps> = ({idGenre}) => {
   }, [idGenre]);
 
   const renderMovieItem = ({item}: {item: Movie}) => (
-    <Pressable style={styles.movieItem}>
+    <Pressable
+      style={styles.movieItem}
+      onPress={() => navigation.navigate('Details', {film: item})}>
       <Image
         source={{uri: 'https://image.tmdb.org/t/p/w500' + item.poster_path}}
         style={styles.movieImage}

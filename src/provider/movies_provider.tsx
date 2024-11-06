@@ -6,6 +6,7 @@ interface MoviesContextType {
   getMoviesByFilter: (genre: string | null) => Promise<MovieApiResponse>;
   getTopRatedMovies: () => Promise<MovieApiResponse>;
   getPopularMovies: () => Promise<MovieApiResponse>;
+  getSpecificMovie: (id: string) => Promise<SpecificMovie>;
   isLoading: boolean;
 }
 
@@ -54,6 +55,28 @@ const MoviesProvider = ({children}: {children: ReactNode}) => {
         return data;
       }
     } catch (error) {
+      throw new Error('error');
+    }
+  };
+
+  const getSpecificMovie = async (id: string): Promise<SpecificMovie> => {
+    const options = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer ' + authToken,
+      },
+    };
+    try {
+      const response = await fetch(
+        'https://api.themoviedb.org/3/movie/'+id,
+        options,
+      );
+      const data: SpecificMovie = await response.json();
+      console.log(data);
+      return data;
+    } catch (err) {
+      console.error(err);
       throw new Error('error');
     }
   };
@@ -108,6 +131,7 @@ const MoviesProvider = ({children}: {children: ReactNode}) => {
         getMoviesByFilter,
         getTopRatedMovies,
         getPopularMovies,
+        getSpecificMovie,
         isLoading,
       }}>
       {children}

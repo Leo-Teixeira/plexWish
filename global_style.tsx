@@ -1,16 +1,14 @@
 import {StyleSheet} from 'react-native';
 
 export const COLORS = {
-  primary: {
-    gray: '#333333',
-    yellow: '#F2C94C',
-    beige: '#FFF8E3',
-  },
-  background: {
-    white: '#FFFFFF',
-    black: '#000000',
-    grey: '#404240',
-  },
+  transparent: 'transparent',
+  white: '#FFFFFF',
+  gold: '#FFD700',
+  lightGray: '#f2f2f2',
+  gray: '#666666',
+  black: '#000000',
+  darkGray: '#333333',
+  darkGold: '#DAA520',
 };
 
 export const globalStyles = StyleSheet.create({
@@ -42,10 +40,10 @@ export const globalStyles = StyleSheet.create({
     maxWidth: 400,
     paddingVertical: 12,
     borderRadius: 8,
-    backgroundColor: COLORS.primary.yellow,
+    backgroundColor: COLORS.gold,
   },
   buttonText: {
-    color: COLORS.background.black,
+    color: COLORS.black,
     textAlign: 'center',
     fontSize: 16,
     fontWeight: 'bold',

@@ -13,6 +13,7 @@ import {LinearGradient} from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from './home_page';
+import {COLORS} from '../../../global_style';
 const {width: screenWidth} = Dimensions.get('window');
 
 type AllMoviesPageNavigationProp = StackNavigationProp<
@@ -121,7 +122,7 @@ export function AllMoviesPage() {
         {/* Black Friday Promo */}
         <View style={styles.promoContainer}>
           <Image
-            source={require('../../asset/black_friday.png')}
+            source={require('../../core/asset/black_friday.png')}
             style={styles.promoImage}
           />
           <Text style={styles.promoTitle}>Black Friday is here!</Text>
@@ -144,20 +145,20 @@ const styles = StyleSheet.create({
     top: 340,
     width: screenWidth,
     alignSelf: 'center',
-    backgroundColor: 'transparent',
+    backgroundColor: COLORS.transparent,
     borderRadius: 10,
     padding: 16,
     zIndex: 9999,
   },
   bodyContainer: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: COLORS.transparent,
     padding: 16,
     paddingTop: 40,
   },
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.white,
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -170,7 +171,7 @@ const styles = StyleSheet.create({
   },
   seeMore: {
     fontSize: 14,
-    color: '#FFD700',
+    color: COLORS.gold,
   },
   marvelList: {
     paddingVertical: 10,
@@ -191,7 +192,7 @@ const styles = StyleSheet.create({
   promoContainer: {
     marginTop: 20,
     padding: 10,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: COLORS.lightGray,
     borderRadius: 10,
   },
   promoImage: {
@@ -205,11 +206,11 @@ const styles = StyleSheet.create({
   },
   promoDescription: {
     fontSize: 14,
-    color: '#666',
+    color: COLORS.gray,
     marginBottom: 10,
   },
   promoButton: {
-    backgroundColor: '#FFD700',
+    backgroundColor: COLORS.gold,
     paddingVertical: 10,
     borderRadius: 10,
     justifyContent: 'center',
@@ -217,7 +218,7 @@ const styles = StyleSheet.create({
   },
   promoButtonText: {
     fontWeight: 'bold',
-    color: '#000',
+    color: COLORS.black,
   },
   carouselItemContainer: {
     width: screenWidth,
@@ -230,7 +231,7 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    backgroundColor: '#FFD700',
+    backgroundColor: COLORS.gold,
     paddingVertical: 10,
     marginHorizontal: 5,
     borderRadius: 10,
@@ -239,7 +240,7 @@ const styles = StyleSheet.create({
   },
   buttonBlack: {
     flex: 1,
-    backgroundColor: '#333333',
+    backgroundColor: COLORS.darkGray,
     paddingVertical: 10,
     marginHorizontal: 5,
     borderRadius: 10,
@@ -248,12 +249,12 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: COLORS.white,
     fontSize: 16,
   },
   buttonTextWhite: {
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: COLORS.white,
     fontSize: 16,
   },
   buttonContainer: {
@@ -270,7 +271,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   text: {
-    color: '#000000',
+    color: COLORS.white,
     fontSize: 16,
   },
 });
