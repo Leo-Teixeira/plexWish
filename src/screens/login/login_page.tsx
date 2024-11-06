@@ -4,10 +4,44 @@ import {useForm, Controller} from 'react-hook-form';
 import {AuthContext} from '../../../src/provider/auth_provider';
 import {COLORS, globalStyles} from '../../../global_style';
 import {styles} from './login_styles';
-import {EyeIcon, EyeOffIcon} from 'lucide-react-native'; // Icons pour voir/cacher le mot de passe
+import {EyeIcon, EyeOffIcon} from 'lucide-react-native';
+import {useNavigation} from '@react-navigation/native';
+import {
+  createStackNavigator,
+  StackNavigationProp,
+} from '@react-navigation/stack';
+import NavigationComponent from '../../components/navigation_component';
 
+export type RootStackParamList = {
+  Login: undefined;
+  Navigation: undefined;
+};
 
-export default function App() {
+const Stack = createStackNavigator<RootStackParamList>();
+
+function LoginStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Login"
+        component={LoginPage}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Navigation"
+        component={NavigationComponent}
+        options={{headerShown: false}}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function LoginPage() {
+  type LoginPageNavigationProp = StackNavigationProp<
+    RootStackParamList,
+    'Navigation'
+  >;
+  const navigation = useNavigation<LoginPageNavigationProp>();
   const [showPassword, setShowPassword] = useState(false);
 
   const authContext = useContext(AuthContext);
@@ -16,7 +50,7 @@ export default function App() {
     throw new Error('AuthContext must be used within an AuthProvider');
   }
 
-  const {signIn, signUp} = authContext;
+  const {signIn} = authContext;
 
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -34,8 +68,10 @@ export default function App() {
   });
 
   const onSubmit = async (data: any) => {
-    console.log(data);
-    await signIn();
+    const result = await signIn();
+    if (result) {
+      navigation.navigate('Navigation');
+    }
   };
 
   return (
@@ -109,20 +145,14 @@ export default function App() {
       </View>
 
       <View style={styles.connectionButton}>
-        <Pressable
-          style={globalStyles.button}
-          onPress={handleSubmit(onSubmit)}>
+        <Pressable style={globalStyles.button} onPress={handleSubmit(onSubmit)}>
           <Text style={globalStyles.buttonText}>Se connecter</Text>
         </Pressable>
 
         <Pressable
-          style={[
-            globalStyles.button,
-            {backgroundColor: COLORS.gray},
-          ]}
+          style={[globalStyles.button, {backgroundColor: COLORS.gray}]}
           onPress={handleSubmit(onSubmit)}>
-          <Text
-            style={[globalStyles.buttonText, {color: COLORS.white}]}>
+          <Text style={[globalStyles.buttonText, {color: COLORS.white}]}>
             S'inscrire
           </Text>
         </Pressable>
@@ -130,3 +160,5 @@ export default function App() {
     </View>
   );
 }
+
+export default LoginStack;

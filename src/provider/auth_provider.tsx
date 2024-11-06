@@ -6,7 +6,7 @@ import {API_KEY, TOKEN} from '@env';
 interface AuthContextType {
   authToken: string | null;
   signUp: (username: string, password: string, email: string) => Promise<void>;
-  signIn: () => Promise<void>;
+  signIn: () => Promise<boolean>;
   signOut: () => Promise<void>;
   checkAuth: () => Promise<boolean>;
   isLoading: boolean;
@@ -18,16 +18,16 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
   const [authToken, setAuthToken] = useState<string | null>(TOKEN);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    const loadToken = async () => {
-      const token = await AsyncStorage.getItem('authToken');
-      if (token) {
-        setAuthToken(token);
-      }
-      setIsLoading(false);
-    };
-    loadToken();
-  }, []);
+  // useEffect(() => {
+  //   const loadToken = async () => {
+  //     const token = await AsyncStorage.getItem('authToken');
+  //     if (token) {
+  //       setAuthToken(token);
+  //     }
+  //     setIsLoading(false);
+  //   };
+  //   loadToken();
+  // }, []);
 
   const signUp = async (username: string, password: string, email: string) => {
     try {
@@ -57,7 +57,6 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
   };
 
   const signIn = async () => {
-    const url = 'https://api.themoviedb.org/3/authentication';
     const options = {
       method: 'GET',
       headers: {
@@ -66,10 +65,15 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
       },
     };
 
-    fetch(url, options)
-      .then(res => res.json())
-      .then(json => console.log(json))
-      .catch(err => console.error('error:' + err));
+    const response = await fetch(
+      'https://api.themoviedb.org/3/authentication',
+      options,
+    );
+    if (response.ok) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   const signOut = async () => {
