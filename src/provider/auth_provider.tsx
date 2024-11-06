@@ -1,5 +1,6 @@
 import React, {createContext, useState, useEffect, ReactNode} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {API_KEY, TOKEN} from '@env';
 
 // Types pour le contexte
 interface AuthContextType {
@@ -14,9 +15,7 @@ interface AuthContextType {
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 const AuthProvider = ({children}: {children: ReactNode}) => {
-  const [authToken, setAuthToken] = useState<string | null>(
-    'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5NGFlZjcwMGQ1MjU5MGMyODU4NjhhNzVmNTk0OGFkNyIsIm5iZiI6MTcyODkzOTUzNy41MDUwNywic3ViIjoiNjU2NDY2ZGI3ZGZkYTY1OTMyNjYyZGYyIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.qPMTRPYliC5vwc31lkpxzcRXnTFjPTBDJvpDW9k-s-0',
-  );
+  const [authToken, setAuthToken] = useState<string | null>(TOKEN);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -33,7 +32,8 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
   const signUp = async (username: string, password: string, email: string) => {
     try {
       const response = await fetch(
-        'https://api.themoviedb.org/3/authentication/token/new?api_key=94aef700d52590c285868a75f5948ad7',
+        'https://api.themoviedb.org/3/authentication/token/new?api_key=' +
+          API_KEY,
         {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
@@ -84,7 +84,8 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
   const checkAuth = async () => {
     try {
       const response = await fetch(
-        `https://api.themoviedb.org/3/authentication/session?api_key=94aef700d52590c285868a75f5948ad7`,
+        `https://api.themoviedb.org/3/authentication/session?api_key=` +
+          API_KEY,
         {
           method: 'GET',
           headers: {Authorization: `Bearer ${authToken}`},

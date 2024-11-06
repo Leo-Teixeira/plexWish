@@ -24,10 +24,6 @@ import {BlurView} from '@react-native-community/blur';
 
 type DetailsScreenRouteProp = RouteProp<RootStackParamList, 'Details'>;
 
-interface SpecificFilm {
-  film?: Movie;
-}
-
 const {width: screenWidth} = Dimensions.get('window');
 
 export function SpecificFilmPage({route}: {route: DetailsScreenRouteProp}) {
@@ -87,7 +83,9 @@ export function SpecificFilmPage({route}: {route: DetailsScreenRouteProp}) {
           }}
           style={styles.image}
         />
-        <Pressable style={styles.buttonReturn} onPress={() => navigation.pop()}>
+        <Pressable
+          style={styles.buttonReturn}
+          onPress={() => navigation.goBack()}>
           <BlurView
             style={styles.blurBackground}
             blurType="light"

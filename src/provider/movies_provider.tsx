@@ -1,5 +1,6 @@
 import React, {createContext, useState, useEffect, ReactNode} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_KEY, TOKEN } from '@env';
 
 // Types pour le contexte
 interface MoviesContextType {
@@ -19,7 +20,7 @@ const MoviesProvider = ({children}: {children: ReactNode}) => {
   useEffect(() => {
     const loadToken = () => {
       const token =
-        'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5NGFlZjcwMGQ1MjU5MGMyODU4NjhhNzVmNTk0OGFkNyIsIm5iZiI6MTcyODkzOTUzNy41MDUwNywic3ViIjoiNjU2NDY2ZGI3ZGZkYTY1OTMyNjYyZGYyIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.qPMTRPYliC5vwc31lkpxzcRXnTFjPTBDJvpDW9k-s-0';
+        TOKEN;
       setAuthToken(token);
       setIsLoading(false);
     };
