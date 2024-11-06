@@ -1,7 +1,5 @@
 import React from 'react';
 import {
-  FlatList,
-  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -19,7 +17,7 @@ const {width: screenWidth} = Dimensions.get('window');
 
 export type RootStackParamList = {
   Home: undefined;
-  Details: {film: Movie}; // Le type de données que vous passez à l'écran Details
+  Details: {film: Movie};
 };
 
 const Stack = createStackNavigator<RootStackParamList>();

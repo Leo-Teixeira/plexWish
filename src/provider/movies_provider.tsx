@@ -1,6 +1,6 @@
 import React, {createContext, useState, useEffect, ReactNode} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API_KEY, TOKEN } from '@env';
+import {API_KEY, TOKEN} from '@env';
 
 // Types pour le contexte
 interface MoviesContextType {
@@ -8,6 +8,7 @@ interface MoviesContextType {
   getTopRatedMovies: () => Promise<MovieApiResponse>;
   getPopularMovies: () => Promise<MovieApiResponse>;
   getSpecificMovie: (id: string) => Promise<SpecificMovie>;
+  addFavoriteMovie: (movieId: string) => Promise<void>;
   isLoading: boolean;
 }
 
@@ -19,8 +20,7 @@ const MoviesProvider = ({children}: {children: ReactNode}) => {
 
   useEffect(() => {
     const loadToken = () => {
-      const token =
-        TOKEN;
+      const token = TOKEN;
       setAuthToken(token);
       setIsLoading(false);
     };
@@ -70,7 +70,7 @@ const MoviesProvider = ({children}: {children: ReactNode}) => {
     };
     try {
       const response = await fetch(
-        'https://api.themoviedb.org/3/movie/'+id,
+        'https://api.themoviedb.org/3/movie/' + id,
         options,
       );
       const data: SpecificMovie = await response.json();
@@ -126,6 +126,48 @@ const MoviesProvider = ({children}: {children: ReactNode}) => {
     }
   };
 
+  const addFavoriteMovie = async (movieId: string): Promise<void> => {
+    const options = {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer ' + authToken,
+      },
+      body: JSON.stringify({
+        media_type: 'movie',
+        media_id: movieId,
+        favorite: 'true',
+      }),
+    };
+    try {
+      await fetch(
+        'https://api.themoviedb.org/3/account/20757476/favorite',
+        options,
+      );
+    } catch (err) {
+      throw new Error('error');
+    }
+  };
+
+  // const getFavoriteMovie = async (): Promise<Movie[]> => {
+  //   const options = {
+  //     method: 'GET',
+  //     headers: {
+  //       accept: 'application/json',
+  //       Authorization:
+  //         'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5NGFlZjcwMGQ1MjU5MGMyODU4NjhhNzVmNTk0OGFkNyIsIm5iZiI6MTcyODkzOTUzNy41MDUwNywic3ViIjoiNjU2NDY2ZGI3ZGZkYTY1OTMyNjYyZGYyIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.qPMTRPYliC5vwc31lkpxzcRXnTFjPTBDJvpDW9k-s-0',
+  //     },
+  //   };
+  //   try {
+  //     const data = await fetch(
+  //       'https://api.themoviedb.org/3/account/20757476/favorite/movies?language=en-US&page=1&sort_by=created_at.asc',
+  //       options,
+  //     );
+  //   } catch (err) {
+  //     throw new Error('error');
+  //   }
+  // };
+
   return (
     <MoviesContext.Provider
       value={{
@@ -133,6 +175,7 @@ const MoviesProvider = ({children}: {children: ReactNode}) => {
         getTopRatedMovies,
         getPopularMovies,
         getSpecificMovie,
+        addFavoriteMovie,
         isLoading,
       }}>
       {children}

@@ -52,10 +52,6 @@ function LoginPage() {
 
   const {signIn} = authContext;
 
-  const [username, setUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-
   const {
     control,
     handleSubmit,

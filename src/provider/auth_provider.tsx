@@ -1,8 +1,6 @@
 import React, {createContext, useState, useEffect, ReactNode} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {API_KEY, TOKEN} from '@env';
-
-// Types pour le contexte
 interface AuthContextType {
   authToken: string | null;
   signUp: (username: string, password: string, email: string) => Promise<void>;
@@ -17,17 +15,6 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 const AuthProvider = ({children}: {children: ReactNode}) => {
   const [authToken, setAuthToken] = useState<string | null>(TOKEN);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  // useEffect(() => {
-  //   const loadToken = async () => {
-  //     const token = await AsyncStorage.getItem('authToken');
-  //     if (token) {
-  //       setAuthToken(token);
-  //     }
-  //     setIsLoading(false);
-  //   };
-  //   loadToken();
-  // }, []);
 
   const signUp = async (username: string, password: string, email: string) => {
     try {

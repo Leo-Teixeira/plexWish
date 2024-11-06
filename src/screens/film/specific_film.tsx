@@ -28,7 +28,7 @@ const {width: screenWidth} = Dimensions.get('window');
 
 export function SpecificFilmPage({route}: {route: DetailsScreenRouteProp}) {
   const navigation = useNavigation();
-  const {getSpecificMovie} = useContext(MoviesContext)!;
+  const {getSpecificMovie, addFavoriteMovie} = useContext(MoviesContext)!;
   const [movie, setMovie] = useState<SpecificMovie>();
   const {film} = route.params;
 
@@ -51,6 +51,10 @@ export function SpecificFilmPage({route}: {route: DetailsScreenRouteProp}) {
 
     fetchData();
   }, []);
+
+  async function handleFavorite(movieId: string) {
+    await addFavoriteMovie(movieId);
+  }
 
   const onTextLayout = useCallback(e => {
     setLengthMore(e.nativeEvent.lines.length >= 4); //to check the text is more than 4 lines or not
@@ -143,7 +147,9 @@ export function SpecificFilmPage({route}: {route: DetailsScreenRouteProp}) {
           ) : null}
         </View>
         <View style={styles.info_date_genre}>
-          <Pressable style={styles.button_row}>
+          <Pressable
+            style={styles.button_row}
+            onPress={() => handleFavorite(movie!.id.toString())}>
             <BookHeart color={COLORS.black} />
             <Text style={globalStyles.buttonText}>Favorite</Text>
           </Pressable>
