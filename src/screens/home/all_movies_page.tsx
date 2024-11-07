@@ -14,6 +14,8 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from './home_page';
 import {COLORS} from '../../../global_style';
+import {useDarkMode} from '../../provider/dark_provider';
+
 const {width: screenWidth} = Dimensions.get('window');
 
 type AllMoviesPageNavigationProp = StackNavigationProp<
@@ -26,6 +28,7 @@ export function AllMoviesPage() {
   const {getMoviesByFilter, getTopRatedMovies} = useContext(MoviesContext)!;
   const [allMovies, setAllMovies] = useState<MovieApiResponse>();
   const [bestMovies, setBestMovies] = useState<MovieApiResponse>();
+  const {darkMode} = useDarkMode();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,12 +53,18 @@ export function AllMoviesPage() {
         source={{uri: 'https://image.tmdb.org/t/p/original' + item.poster_path}}
         style={styles.marvelImage}
       />
-      <Text style={styles.marvelTitle}>{item.title}</Text>
+      <Text style={[styles.marvelTitle, darkMode && styles.darkText]}>
+        {item.title}
+      </Text>
     </Pressable>
   );
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        darkMode ? styles.darkContainer : styles.lightContainer,
+      ]}>
       <FlatList
         data={bestMovies?.results}
         renderItem={({item}) => (
@@ -70,29 +79,42 @@ export function AllMoviesPage() {
         )}
         keyExtractor={item => item.id.toString()}
         horizontal
-        showsHorizontalScrollIndicator={false}
+        showsHorizontalScrollIndicator={true}
         pagingEnabled
       />
 
       <LinearGradient
-        colors={['transparent', 'rgba(255, 255, 255, 1)']}
+        colors={
+          darkMode
+            ? ['transparent', 'rgba(0, 0, 0, 0.8)']
+            : ['transparent', 'rgba(255, 255, 255, 1)']
+        }
         style={styles.overlayContainer}>
         <View style={styles.textContainer}>
-          <Text style={styles.text}>My List</Text>
-          <Text style={styles.text}>Discover</Text>
+          <Text style={[styles.text, darkMode && styles.darkText]}>
+            My List
+          </Text>
+          <Text style={[styles.text, darkMode && styles.darkText]}>
+            Discover
+          </Text>
         </View>
         <View style={styles.buttonContainer}>
           <Pressable style={styles.buttonBlack}>
             <Text style={styles.buttonTextWhite}>+ Wishlist</Text>
           </Pressable>
           <Pressable style={styles.button}>
-            <Text style={styles.buttonText}>Details</Text>
+            <Text
+              style={[styles.buttonText, darkMode && styles.darkButtonText]}>
+              Details
+            </Text>
           </Pressable>
         </View>
       </LinearGradient>
       <View style={styles.bodyContainer}>
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>All Movies Genre</Text>
+          <Text style={[styles.sectionTitle, darkMode && styles.darkText]}>
+            All Movies Genre
+          </Text>
           <Text style={styles.seeMore}>See more</Text>
         </View>
 
@@ -106,7 +128,9 @@ export function AllMoviesPage() {
         />
 
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Best Movies</Text>
+          <Text style={[styles.sectionTitle, darkMode && styles.darkText]}>
+            Best Movies
+          </Text>
           <Text style={styles.seeMore}>See more</Text>
         </View>
 
@@ -120,18 +144,30 @@ export function AllMoviesPage() {
         />
 
         {/* Black Friday Promo */}
-        <View style={styles.promoContainer}>
+        <View
+          style={[
+            styles.promoContainer,
+            darkMode && styles.blackPromoContainer,
+          ]}>
           <Image
             source={require('../../core/asset/black_friday.png')}
             style={styles.promoImage}
           />
-          <Text style={styles.promoTitle}>Black Friday is here!</Text>
-          <Text style={styles.promoDescription}>
+          <Text style={[styles.promoTitle, darkMode && styles.darkText]}>
+            Black Friday is here!
+          </Text>
+          <Text style={[styles.promoDescription, darkMode && styles.darkText]}>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel
             pulvinar auctor.
           </Text>
           <Pressable style={styles.promoButton}>
-            <Text style={styles.promoButtonText}>Check details</Text>
+            <Text
+              style={[
+                styles.promoButtonText,
+                darkMode && styles.darkButtonText,
+              ]}>
+              Check details
+            </Text>
           </Pressable>
         </View>
       </View>
@@ -145,20 +181,23 @@ const styles = StyleSheet.create({
     top: 340,
     width: screenWidth,
     alignSelf: 'center',
-    backgroundColor: COLORS.transparent,
     borderRadius: 10,
     padding: 16,
     zIndex: 9999,
   },
-  bodyContainer: {
-    flex: 1,
-    backgroundColor: COLORS.transparent,
-    padding: 16,
-    paddingTop: 40,
-  },
   container: {
     flex: 1,
+  },
+  lightContainer: {
     backgroundColor: COLORS.white,
+  },
+  darkContainer: {
+    backgroundColor: COLORS.black,
+  },
+  bodyContainer: {
+    flex: 1,
+    padding: 16,
+    paddingTop: 40,
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -188,12 +227,16 @@ const styles = StyleSheet.create({
   marvelTitle: {
     textAlign: 'center',
     marginTop: 5,
+    color: COLORS.black,
   },
   promoContainer: {
     marginTop: 20,
     padding: 10,
-    backgroundColor: COLORS.lightGray,
+    backgroundColor: COLORS.white,
     borderRadius: 10,
+  },
+  blackPromoContainer: {
+    backgroundColor: COLORS.black,
   },
   promoImage: {
     width: '100%',
@@ -203,10 +246,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginVertical: 10,
+    color: COLORS.black,
   },
   promoDescription: {
     fontSize: 14,
-    color: COLORS.gray,
+    color: COLORS.black,
     marginBottom: 10,
   },
   promoButton: {
@@ -218,7 +262,7 @@ const styles = StyleSheet.create({
   },
   promoButtonText: {
     fontWeight: 'bold',
-    color: COLORS.black,
+    color: COLORS.white,
   },
   carouselItemContainer: {
     width: screenWidth,
@@ -257,6 +301,12 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     fontSize: 16,
   },
+  darkText: {
+    color: COLORS.white,
+  },
+  darkButtonText: {
+    color: COLORS.black,
+  },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -271,8 +321,8 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   text: {
-    color: COLORS.white,
     fontSize: 16,
+    color: COLORS.black,
   },
 });
 

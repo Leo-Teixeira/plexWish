@@ -12,8 +12,11 @@ import {MoviesContext} from '../../provider/movies_provider';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from './home_page';
+import {useDarkMode} from '../../provider/dark_provider';
+import {COLORS} from '../../../global_style';
 
 const {width: screenWidth} = Dimensions.get('window');
+
 interface MoviesGenrePageProps {
   idGenre: string;
 }
@@ -26,6 +29,7 @@ type AllMoviesPageNavigationProp = StackNavigationProp<
 export const MoviesGenrePage: React.FC<MoviesGenrePageProps> = ({idGenre}) => {
   const navigation = useNavigation<AllMoviesPageNavigationProp>();
   const {getMoviesByFilter} = useContext(MoviesContext)!;
+  const {darkMode} = useDarkMode();
   const [movies, setMovies] = useState<Movie[]>([]);
 
   useEffect(() => {
@@ -43,25 +47,31 @@ export const MoviesGenrePage: React.FC<MoviesGenrePageProps> = ({idGenre}) => {
 
   const renderMovieItem = ({item}: {item: Movie}) => (
     <Pressable
-      style={styles.movieItem}
+      style={[styles.movieItem, darkMode && styles.darkMovieItem]}
       onPress={() => navigation.navigate('Details', {film: item})}>
       <Image
         source={{uri: 'https://image.tmdb.org/t/p/w500' + item.poster_path}}
         style={styles.movieImage}
       />
-      <Text style={styles.movieTitle} numberOfLines={1}>
+      <Text
+        style={[styles.movieTitle, darkMode && styles.darkText]}
+        numberOfLines={1}>
         {item.title}
       </Text>
     </Pressable>
   );
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        darkMode ? styles.darkContainer : styles.lightContainer,
+      ]}>
       <FlatList
         data={movies}
         renderItem={renderMovieItem}
         keyExtractor={item => item.id.toString()}
-        numColumns={2} // Display two movies per row
+        numColumns={2}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContent}
       />
@@ -72,9 +82,13 @@ export const MoviesGenrePage: React.FC<MoviesGenrePageProps> = ({idGenre}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 8,
-    paddingTop: 64,
+    paddingTop: 64
+  },
+  lightContainer: {
+    backgroundColor: COLORS.white,
+  },
+  darkContainer: {
+    backgroundColor: COLORS.black,
   },
   listContent: {
     paddingBottom: 16,
@@ -82,11 +96,14 @@ const styles = StyleSheet.create({
   movieItem: {
     flex: 1,
     margin: 8,
-    backgroundColor: '#ffffff',
+    backgroundColor: COLORS.white,
     borderRadius: 8,
     overflow: 'hidden',
     alignItems: 'center',
-    width: (screenWidth - 48) / 2, // Width calculation for 2 columns with margins
+    width: (screenWidth - 48) / 2,
+  },
+  darkMovieItem: {
+    backgroundColor: COLORS.black,
   },
   movieImage: {
     width: '100%',
@@ -99,6 +116,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     paddingHorizontal: 4,
+    color: COLORS.black,
+  },
+  darkText: {
+    color: COLORS.white,
   },
 });
 

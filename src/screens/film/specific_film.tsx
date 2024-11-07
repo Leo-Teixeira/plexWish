@@ -21,23 +21,22 @@ import {
   ArrowLeft,
 } from 'lucide-react-native';
 import {BlurView} from '@react-native-community/blur';
+import {useDarkMode} from '../../provider/dark_provider';
 
 type DetailsScreenRouteProp = RouteProp<RootStackParamList, 'Details'>;
 
-const {width: screenWidth} = Dimensions.get('window');
+const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
 export function SpecificFilmPage({route}: {route: DetailsScreenRouteProp}) {
   const navigation = useNavigation();
   const {getSpecificMovie, addFavoriteMovie} = useContext(MoviesContext)!;
+  const {darkMode} = useDarkMode();
   const [movie, setMovie] = useState<SpecificMovie>();
   const {film} = route.params;
 
-  const [textShown, setTextShown] = useState(false); //To show ur remaining Text
-  const [lengthMore, setLengthMore] = useState(false); //to show the "Read more & Less Line"
-  const toggleNumberOfLines = () => {
-    //To toggle the show text or hide it
-    setTextShown(!textShown);
-  };
+  const [textShown, setTextShown] = useState(false);
+  const [lengthMore, setLengthMore] = useState(false);
+  const toggleNumberOfLines = () => setTextShown(!textShown);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,25 +56,12 @@ export function SpecificFilmPage({route}: {route: DetailsScreenRouteProp}) {
   }
 
   const onTextLayout = useCallback(e => {
-    setLengthMore(e.nativeEvent.lines.length >= 4); //to check the text is more than 4 lines or not
-    // console.log(e.nativeEvent);
+    setLengthMore(e.nativeEvent.lines.length >= 4);
   }, []);
 
   function concatenateText(items: Genre[] | undefined) {
-    if (items == undefined) {
-      return '';
-    }
-    let result = '';
-
-    for (let i = 0; i < items.length; i++) {
-      result += items[i].name;
-
-      if (i < items.length - 1) {
-        result += '/';
-      }
-    }
-
-    return result;
+    if (!items) return '';
+    return items.map(item => item.name).join('/');
   }
 
   return (
@@ -112,21 +98,32 @@ export function SpecificFilmPage({route}: {route: DetailsScreenRouteProp}) {
                 ? 'red'
                 : 'gray',
           },
+          darkMode && styles.darkText,
         ]}>
         {movie?.status}
       </Text>
-      <View style={styles.bodyContainer}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>{movie?.title}</Text>
-          <View style={styles.note}>
+      <View style={styles.note}>
             <Star color={COLORS.darkGold} fill={COLORS.darkGold} />
-            <Text style={styles.vote}>{movie?.vote_average}</Text>
+            <Text style={[styles.vote, darkMode && styles.darkText]}>
+              {movie?.vote_average}
+            </Text>
           </View>
+      <View
+        style={[styles.bodyContainer, darkMode && styles.darkBodyContainer]}>
+        <View style={styles.titleContainer}>
+          <Text style={[styles.title, darkMode && styles.darkText]}>
+            {movie?.title}
+          </Text>
+          
         </View>
-        <View style={styles.info_date_genre}>
-          <Text style={styles.text}>{movie?.release_date}</Text>
-          <Text style={styles.text}>•</Text>
-          <Text style={styles.text}>{concatenateText(movie?.genres)}</Text>
+        <View>
+          <Text style={[styles.text, darkMode && styles.darkText]}>
+            {movie?.release_date}
+          </Text>
+
+          <Text style={[styles.text, darkMode && styles.darkText]}>
+            {concatenateText(movie?.genres)}
+          </Text>
         </View>
         <Pressable style={styles.button}>
           <Play color={COLORS.black} fill={COLORS.black} />
@@ -136,17 +133,18 @@ export function SpecificFilmPage({route}: {route: DetailsScreenRouteProp}) {
           <Text
             onTextLayout={onTextLayout}
             numberOfLines={textShown ? undefined : 4}
-            style={styles.text}>
+            style={[styles.text, darkMode && styles.darkText]}>
             {movie?.overview}
           </Text>
-
-          {lengthMore ? (
-            <Text onPress={toggleNumberOfLines} style={styles.readMore}>
+          {lengthMore && (
+            <Text
+              onPress={toggleNumberOfLines}
+              style={[styles.readMore, darkMode && styles.darkText]}>
               {textShown ? 'Read less...' : 'Read more...'}
             </Text>
-          ) : null}
+          )}
         </View>
-        <View style={styles.info_date_genre}>
+        <View style={styles.button_list}>
           <Pressable
             style={styles.button_row}
             onPress={() => handleFavorite(movie!.id.toString())}>
@@ -173,48 +171,43 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-
   image: {
     width: '100%',
     height: 430,
   },
-
   bodyContainer: {
     padding: 16,
     gap: 16,
   },
-
+  darkBodyContainer: {
+    backgroundColor: COLORS.black,
+  },
   title: {
-    color: '#000000',
+    color: COLORS.black,
     fontSize: 32,
   },
-
   titleContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-
   note: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     gap: 8,
+    position: 'absolute',
+    left: screenWidth * 0.78,
+    top: screenHeight * 0.51,
+    color: COLORS.black,
+    borderRadius: 8,
+    textAlign: 'center',
   },
-
   vote: {
-    color: COLORS.darkGold,
+    color: COLORS.white,
     fontSize: 16,
   },
-
-  listGenre: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-  },
-
   status: {
     position: 'absolute',
-    top: 380,
+    top: screenHeight * 0.49,
     width: '25%',
     padding: 8,
     margin: 8,
@@ -222,23 +215,17 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     textAlign: 'center',
   },
-
-  genreText: {
+  darkText: {
     color: COLORS.white,
-    fontSize: 12,
   },
-
   text: {
     color: COLORS.black,
     fontSize: 16,
   },
-
-  info_date_genre: {
+  button_list: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
-    gap: 8,
+    justifyContent: 'space-between',
   },
-
   button: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -249,13 +236,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: COLORS.gold,
   },
-
   readMore: {
     color: COLORS.black,
     fontWeight: 'bold',
     fontSize: 14,
   },
-
   button_row: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -266,7 +251,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: COLORS.gold,
   },
-
   buttonReturn: {
     position: 'absolute',
     top: 25,
@@ -277,16 +261,17 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    alignContent: 'flex-start',
   },
-
   blurBackground: {
     width: '100%',
     height: '100%',
     borderRadius: 25,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(128, 128, 128, 0.3)', // gris transparent pour le fond
+    backgroundColor: 'rgba(128, 128, 128, 0.3)',
+  },
+  darkButtonText: {
+    color: COLORS.white,
   },
 });
 

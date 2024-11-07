@@ -6,61 +6,45 @@ import {House, Search, BookmarkMinus, User} from 'lucide-react-native';
 import {COLORS} from '../../global_style';
 import HomeStack from '../screens/home/home_page';
 import React from 'react';
-
+import {useDarkMode} from '../provider/dark_provider';
 
 const Tab = createBottomTabNavigator();
 
 function NavigationComponent() {
+  const {darkMode} = useDarkMode();
+
   return (
-    <>
-      <Tab.Navigator
-        screenOptions={({route}) => ({
-          header: props => <></>,
-          tabBarIcon: ({focused, color, size}) => {
-            switch (route.name) {
-              case 'Home':
-                return (
-                  <House
-                    color={
-                      focused ? COLORS.gold : COLORS.black
-                    }
-                  />
-                );
-              case 'Search':
-                return (
-                  <Search
-                    color={
-                      focused ? COLORS.gold : COLORS.black
-                    }
-                  />
-                );
-              case 'Whishlist':
-                return (
-                  <BookmarkMinus
-                    color={
-                      focused ? COLORS.gold : COLORS.black
-                    }
-                  />
-                );
-              case 'Profile':
-                return (
-                  <User
-                    color={
-                      focused ? COLORS.gold : COLORS.black
-                    }
-                  />
-                );
-            }
-          },
-          tabBarActiveTintColor: COLORS.gold,
-          tabBarInactiveTintColor: COLORS.gray,
-        })}>
-        <Tab.Screen name="Home" component={HomeStack} />
-        <Tab.Screen name="Search" component={SearchPage} />
-        <Tab.Screen name="Whishlist" component={WhishlistPage} />
-        <Tab.Screen name="Profile" component={ProfilePage} />
-      </Tab.Navigator>
-    </>
+    <Tab.Navigator
+      screenOptions={({route}) => ({
+        header: () => null,
+        tabBarStyle: {
+          backgroundColor: darkMode ? COLORS.black : COLORS.white,
+        },
+        tabBarIcon: ({focused}) => {
+          const color = focused
+            ? COLORS.gold
+            : darkMode
+            ? COLORS.white
+            : COLORS.black;
+          switch (route.name) {
+            case 'Home':
+              return <House color={color} />;
+            case 'Search':
+              return <Search color={color} />;
+            case 'Whishlist':
+              return <BookmarkMinus color={color} />;
+            case 'Profile':
+              return <User color={color} />;
+          }
+        },
+        tabBarActiveTintColor: COLORS.gold,
+        tabBarInactiveTintColor: darkMode ? COLORS.white : COLORS.black,
+      })}>
+      <Tab.Screen name="Home" component={HomeStack} />
+      <Tab.Screen name="Search" component={SearchPage} />
+      <Tab.Screen name="Whishlist" component={WhishlistPage} />
+      <Tab.Screen name="Profile" component={ProfilePage} />
+    </Tab.Navigator>
   );
 }
 
